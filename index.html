@@ -151,6 +151,20 @@
   .intro-copy{ flex:1; min-width:220px; }
   .intro-copy p{ font-size:14px; line-height:1.9; color:var(--ink); margin:0 0 16px; }
   .intro-copy p:last-child{ margin-bottom:0; }
+  .channel-desc{ color:var(--dim); font-size:13px; line-height:1.9; margin:0 0 20px; }
+
+  /* --- larger screens: bump text up, small sizes read tiny at desktop viewing distance --- */
+  @media (min-width:700px){
+    .loader-text{ font-size:18px; }
+    .btn{ font-size:14px; }
+    h2{ font-size:26px; }
+    .section-intro{ font-size:16px; }
+    .screen-label{ font-size:18px; }
+    .screen-label span{ font-size:14px; }
+    .channel-copy ul{ font-size:15px; }
+    .intro-copy p{ font-size:17px; }
+    .channel-desc{ font-size:16px; }
+  }
 </style>
 </head>
 <body>
@@ -188,7 +202,7 @@
         <div class="screen-label">PABLISKY48<span>toca play en YouTube ▶</span></div>
       </div>
       <div class="channel-copy">
-        <p style="color:var(--dim); font-size:13px; line-height:1.9;">Grabaciones del proceso real: builds que explotan, decisiones de diseño sobre la marcha y el avance semana a semana de cada proyecto.</p>
+        <p class="channel-desc">Grabaciones del proceso real: builds que explotan, decisiones de diseño sobre la marcha y el avance semana a semana de cada proyecto.</p>
         <ul>
           <li>Devlogs del juego de terror</li>
           <li>Sesiones de armado de Cube Jumper</li>
