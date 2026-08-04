@@ -45,7 +45,7 @@
   }
   .loader.hide{ opacity:0; pointer-events:none; }
   .loader-text{
-    font-family:'Silkscreen', monospace; font-size:11px; line-height:2.2;
+    font-family:'Silkscreen', monospace; font-size:14px; line-height:2;
     color:var(--green); white-space:pre-wrap; max-width:480px;
   }
   .loader-text .cursor{
@@ -101,7 +101,7 @@
   }
 
   .btn{
-    font-family:'Silkscreen', monospace; font-size:9px;
+    font-family:'Silkscreen', monospace; font-size:12px;
     padding:14px 18px; text-decoration:none; display:inline-block;
     border:1px solid var(--panel-edge); color:var(--ink);
     transition:border-color 0.2s, transform 0.2s;
@@ -111,8 +111,8 @@
   .btn-primary:hover{ box-shadow:0 0 0 1px var(--green), 0 0 24px rgba(60,255,158,0.35); }
 
   section{ padding:64px 0; }
-  h2{ font-size:16px; line-height:1.8; margin:0 0 14px; }
-  .section-intro{ color:var(--dim); font-size:10px; line-height:2; max-width:600px; margin-bottom:36px; }
+  h2{ font-size:20px; line-height:1.7; margin:0 0 14px; }
+  .section-intro{ color:var(--dim); font-size:13px; line-height:1.9; max-width:600px; margin-bottom:36px; }
 
   /* --- canal / youtube --- */
   .channel-block{
@@ -131,12 +131,12 @@
     background:radial-gradient(circle at center, rgba(60,255,158,0.08), transparent 70%);
   }
   .screen-label{
-    font-family:'Silkscreen', monospace; font-size:11px; color:var(--green);
+    font-family:'Silkscreen', monospace; font-size:14px; color:var(--green);
     text-align:center; line-height:2.4; z-index:1;
   }
-  .screen-label span{ display:block; color:var(--dim); font-size:9px; margin-top:14px; }
+  .screen-label span{ display:block; color:var(--dim); font-size:11px; margin-top:14px; }
 
-  .channel-copy ul{ list-style:none; margin:20px 0; padding:0; font-size:9px; line-height:2.2; color:var(--dim); }
+  .channel-copy ul{ list-style:none; margin:20px 0; padding:0; font-size:12px; line-height:2; color:var(--dim); }
   .channel-copy li{ margin-bottom:12px; padding-left:16px; position:relative; }
   .channel-copy li::before{ content:"\203a"; position:absolute; left:0; color:var(--green); }
 
@@ -149,7 +149,7 @@
     image-rendering:pixelated; image-rendering:crisp-edges;
   }
   .intro-copy{ flex:1; min-width:220px; }
-  .intro-copy p{ font-size:11px; line-height:2.1; color:var(--ink); margin:0 0 16px; }
+  .intro-copy p{ font-size:14px; line-height:1.9; color:var(--ink); margin:0 0 16px; }
   .intro-copy p:last-child{ margin-bottom:0; }
 </style>
 </head>
@@ -188,7 +188,7 @@
         <div class="screen-label">PABLISKY48<span>toca play en YouTube ▶</span></div>
       </div>
       <div class="channel-copy">
-        <p style="color:var(--dim); font-size:10px; line-height:2;">Grabaciones del proceso real: builds que explotan, decisiones de diseño sobre la marcha y el avance semana a semana de cada proyecto.</p>
+        <p style="color:var(--dim); font-size:13px; line-height:1.9;">Grabaciones del proceso real: builds que explotan, decisiones de diseño sobre la marcha y el avance semana a semana de cada proyecto.</p>
         <ul>
           <li>Devlogs del juego de terror</li>
           <li>Sesiones de armado de Cube Jumper</li>
@@ -237,7 +237,8 @@
   }
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    loaderEl.classList.add('hide');
+    loaderTextEl.textContent = bootLines.join('\n');
+    setTimeout(() => loaderEl.classList.add('hide'), 600);
   } else {
     typeBoot();
   }
