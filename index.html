@@ -160,7 +160,8 @@
   .channel-desc{ color:var(--dim); font-size:13px; line-height:1.9; margin:0 0 20px; }
 
   /* --- listas de reproducción --- */
-  .yt-embed{ position:absolute; inset:0; width:100%; height:100%; border:0; z-index:1; }
+  .embed-frame{ position:absolute; inset:0; width:100%; height:100%; border:0; z-index:1; }
+  .game-frame{ aspect-ratio:4/3; background:#0f0f1a; }
   .screen + .btn{ margin-top:20px; }
 
   /* --- amigos / primos --- */
@@ -207,6 +208,7 @@
     <li><a href="#canal">Canal</a></li>
     <li><a href="#listas">Listas</a></li>
     <li><a href="#amigos">Amigos</a></li>
+    <li><a href="#jugar">Jugar</a></li>
   </ul>
   </nav>
 </header>
@@ -250,7 +252,7 @@
     <h2>Mis listas de reproducción</h2>
     <p class="section-intro">Todo organizado por tema, listo para maratonear.</p>
     <div class="screen">
-      <iframe class="yt-embed" src="https://www.youtube.com/embed/videoseries?list=PLPY0KscJ8Bx4vNCocCa0IFN_Xt-rVl3JQ" title="Mis listas de reproducción" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      <iframe class="embed-frame" src="https://www.youtube.com/embed/videoseries?list=PLPY0KscJ8Bx4vNCocCa0IFN_Xt-rVl3JQ" title="Mis listas de reproducción" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
     </div>
     <a class="btn btn-primary" href="https://youtube.com/playlist?list=PLPY0KscJ8Bx4vNCocCa0IFN_Xt-rVl3JQ" target="_blank" rel="noopener">Abrir en YouTube</a>
   </section>
@@ -267,7 +269,7 @@
         <span class="friend-tag">MI AMIGO</span>
         <span class="friend-name">Franco</span>
       </a>
-      <a class="friend-card" href="https://youtube.com/@tomas145k4" target="_blank" rel="noopener">
+      <a class="friend-card" href="https://www.youtube.com/@Tomas145k" target="_blank" rel="noopener">
         <span class="friend-tag">MI AMIGO</span>
         <span class="friend-name">Tomas</span>
       </a>
@@ -275,6 +277,568 @@
         <span class="friend-tag">MI AMIGO</span>
         <span class="friend-name">Zack</span>
       </a>
+    </div>
+  </section>
+
+  <section id="jugar">
+    <h2>Cube Jumper</h2>
+    <p class="section-intro">Jugable directo acá — saltá los cubos y sobreviví el mayor tiempo posible.</p>
+    <div class="screen game-frame">
+      <iframe class="embed-frame" title="Cube Jumper" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;es&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+&lt;title&gt;Cube Jumper 🟦&lt;/title&gt;
+&lt;style&gt;
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0f0f1a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: &#x27;Courier New&#x27;, monospace;
+    color: #e0e0ff;
+    overflow: hidden;
+  }
+  h1 {
+    font-size: 1.6rem;
+    letter-spacing: 0.2em;
+    color: #7c6ff7;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  #score-bar {
+    display: flex;
+    gap: 28px;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    color: #a0a0cc;
+    align-items: center;
+  }
+  #score-bar span { color: #e0e0ff; font-weight: bold; }
+  #lives-display { display: flex; gap: 5px; align-items: center; }
+  .heart { font-size: 1.1rem; transition: transform 0.2s; }
+  .heart.lost { filter: grayscale(1) brightness(0.4); }
+  canvas {
+    max-width: 100%;
+    height: auto;
+    border: 2px solid #2e2e5e;
+    border-radius: 8px;
+    background: #13132b;
+    box-shadow: 0 0 40px #3a2fc040;
+    display: block;
+  }
+  #msg {
+    margin-top: 14px;
+    font-size: 0.85rem;
+    color: #6060a0;
+    letter-spacing: 0.1em;
+  }
+  #overlay {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  #overlay h2 { font-size: 2rem; color: #7c6ff7; text-shadow: 0 0 20px #7c6ff770; }
+  #overlay p { color: #a0a0cc; font-size: 0.9rem; }
+  button {
+    margin-top: 8px;
+    padding: 10px 28px;
+    background: #7c6ff7;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-family: &#x27;Courier New&#x27;, monospace;
+    font-size: 1rem;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: background 0.2s;
+  }
+  button:hover { background: #9d93f9; }
+  #mute-btn {
+    position: absolute;
+    top: 10px; right: 14px;
+    background: none;
+    border: 1px solid #2e2e5e;
+    border-radius: 6px;
+    color: #6060a0;
+    font-size: 1.2rem;
+    padding: 4px 8px;
+    cursor: pointer;
+    margin: 0;
+  }
+  #mute-btn:hover { color: #e0e0ff; background: #1e1e42; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    20%{transform:translateX(-6px)}
+    40%{transform:translateX(6px)}
+    60%{transform:translateX(-4px)}
+    80%{transform:translateX(4px)}
+  }
+  .shaking { animation: shake 0.35s ease; }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;button id=&quot;mute-btn&quot; title=&quot;Silenciar música&quot;&gt;🔊&lt;/button&gt;
+&lt;h1&gt;Cube Jumper&lt;/h1&gt;
+&lt;div id=&quot;score-bar&quot;&gt;
+  PUNTOS: &lt;span id=&quot;pts&quot;&gt;0&lt;/span&gt;
+  &amp;nbsp;|&amp;nbsp;
+  RÉCORD: &lt;span id=&quot;best&quot;&gt;0&lt;/span&gt;
+  &amp;nbsp;|&amp;nbsp;
+  &lt;span style=&quot;color:#a0a0cc&quot;&gt;VIDAS:&lt;/span&gt;
+  &lt;div id=&quot;lives-display&quot;&gt;
+    &lt;span class=&quot;heart&quot; id=&quot;h1&quot;&gt;❤️&lt;/span&gt;
+    &lt;span class=&quot;heart&quot; id=&quot;h2&quot;&gt;❤️&lt;/span&gt;
+    &lt;span class=&quot;heart&quot; id=&quot;h3&quot;&gt;❤️&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;canvas id=&quot;c&quot; width=&quot;640&quot; height=&quot;220&quot;&gt;&lt;/canvas&gt;
+&lt;div id=&quot;msg&quot;&gt;ESPACIO / TAP para saltar &amp;nbsp;·&amp;nbsp; Doble salto disponible!&lt;/div&gt;
+
+&lt;div id=&quot;overlay&quot;&gt;
+  &lt;h2&gt;CUBE JUMPER&lt;/h2&gt;
+  &lt;p&gt;Salta sobre los cubos y sobrevive el mayor tiempo posible.&lt;/p&gt;
+  &lt;p style=&quot;color:#6c6ca0;font-size:0.8rem&quot;&gt;3 vidas · Doble salto · La velocidad aumenta con el tiempo&lt;/p&gt;
+  &lt;button id=&quot;startBtn&quot;&gt;▶ JUGAR&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+// ===================== AUDIO ENGINE =====================
+const AC = new (window.AudioContext || window.webkitAudioContext)();
+let muted = false;
+let musicNodes = [];
+
+document.getElementById(&#x27;mute-btn&#x27;).addEventListener(&#x27;click&#x27;, () =&gt; {
+  muted = !muted;
+  document.getElementById(&#x27;mute-btn&#x27;).textContent = muted ? &#x27;🔇&#x27; : &#x27;🔊&#x27;;
+  musicNodes.forEach(n =&gt; { try { n.gain ? (n.gain.value = muted ? 0 : 0.08) : null; } catch(e){} });
+});
+
+// Simple chiptune loop using oscillators
+let musicGain, musicStarted = false;
+
+function startMusic() {
+  if (musicStarted) return;
+  musicStarted = true;
+  if (AC.state === &#x27;suspended&#x27;) AC.resume();
+
+  musicGain = AC.createGain();
+  musicGain.gain.value = muted ? 0 : 0.07;
+  musicGain.connect(AC.destination);
+  musicNodes.push(musicGain);
+
+  // BPM = 140, 8th note = 60/140/2
+  const BPM = 140;
+  const BEAT = 60 / BPM;
+  const S = BEAT / 2; // 8th note duration
+
+  // Melody notes (looping 16-bar phrase)
+  const mel = [
+    523,523,659,784, 880,784,659,523,
+    659,659,784,880, 988,880,784,659,
+    523,523,659,784, 880,784,659,523,
+    784,784,880,988, 1047,988,880,784,
+  ];
+  // Bass line
+  const bass = [
+    131,131,165,196, 220,196,165,131,
+    165,165,196,220, 247,220,196,165,
+    131,131,165,196, 220,196,165,131,
+    196,196,220,247, 262,247,220,196,
+  ];
+
+  function scheduleLoop(startT) {
+    const len = mel.length;
+    for (let i = 0; i &lt; len; i++) {
+      const t = startT + i * S;
+      // melody osc
+      const oM = AC.createOscillator();
+      oM.type = &#x27;square&#x27;;
+      oM.frequency.value = mel[i];
+      const gM = AC.createGain();
+      gM.gain.setValueAtTime(0.3, t);
+      gM.gain.exponentialRampToValueAtTime(0.01, t + S * 0.85);
+      oM.connect(gM); gM.connect(musicGain);
+      oM.start(t); oM.stop(t + S);
+
+      // bass osc
+      const oB = AC.createOscillator();
+      oB.type = &#x27;sawtooth&#x27;;
+      oB.frequency.value = bass[i];
+      const gB = AC.createGain();
+      gB.gain.setValueAtTime(0.15, t);
+      gB.gain.exponentialRampToValueAtTime(0.01, t + S * 0.7);
+      oB.connect(gB); gB.connect(musicGain);
+      oB.start(t); oB.stop(t + S);
+
+      // hi-hat every 2 steps
+      if (i % 2 === 0) {
+        const buf = AC.createBuffer(1, AC.sampleRate * 0.05, AC.sampleRate);
+        const data = buf.getChannelData(0);
+        for (let j = 0; j &lt; data.length; j++) data[j] = (Math.random() * 2 - 1) * (1 - j / data.length);
+        const src = AC.createBufferSource();
+        src.buffer = buf;
+        const gH = AC.createGain();
+        gH.gain.value = 0.1;
+        src.connect(gH); gH.connect(musicGain);
+        src.start(t);
+      }
+    }
+    // Schedule next loop
+    setTimeout(() =&gt; scheduleLoop(startT + len * S), (len * S - 0.5) * 1000);
+  }
+
+  scheduleLoop(AC.currentTime + 0.1);
+}
+
+function playSFX(type) {
+  if (muted) return;
+  if (AC.state === &#x27;suspended&#x27;) AC.resume();
+  const g = AC.createGain();
+  g.connect(AC.destination);
+
+  if (type === &#x27;jump&#x27;) {
+    const o = AC.createOscillator();
+    o.type = &#x27;sine&#x27;;
+    o.frequency.setValueAtTime(300, AC.currentTime);
+    o.frequency.exponentialRampToValueAtTime(600, AC.currentTime + 0.1);
+    g.gain.setValueAtTime(0.2, AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, AC.currentTime + 0.15);
+    o.connect(g); o.start(); o.stop(AC.currentTime + 0.15);
+  } else if (type === &#x27;hit&#x27;) {
+    const o = AC.createOscillator();
+    o.type = &#x27;sawtooth&#x27;;
+    o.frequency.setValueAtTime(200, AC.currentTime);
+    o.frequency.exponentialRampToValueAtTime(80, AC.currentTime + 0.25);
+    g.gain.setValueAtTime(0.3, AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, AC.currentTime + 0.3);
+    o.connect(g); o.start(); o.stop(AC.currentTime + 0.3);
+  } else if (type === &#x27;die&#x27;) {
+    // descending arpeggio
+    [400, 300, 200, 100].forEach((freq, i) =&gt; {
+      const o = AC.createOscillator();
+      o.type = &#x27;square&#x27;;
+      o.frequency.value = freq;
+      const gi = AC.createGain();
+      gi.gain.setValueAtTime(0.25, AC.currentTime + i * 0.1);
+      gi.gain.exponentialRampToValueAtTime(0.001, AC.currentTime + i * 0.1 + 0.1);
+      o.connect(gi); gi.connect(AC.destination);
+      o.start(AC.currentTime + i * 0.1);
+      o.stop(AC.currentTime + i * 0.1 + 0.12);
+    });
+  }
+}
+
+// ===================== GAME =====================
+const canvas = document.getElementById(&#x27;c&#x27;);
+const ctx = canvas.getContext(&#x27;2d&#x27;);
+const overlay = document.getElementById(&#x27;overlay&#x27;);
+const overlayH2 = overlay.querySelector(&#x27;h2&#x27;);
+const overlayP = overlay.querySelectorAll(&#x27;p&#x27;);
+const startBtn = document.getElementById(&#x27;startBtn&#x27;);
+const ptsEl = document.getElementById(&#x27;pts&#x27;);
+const bestEl = document.getElementById(&#x27;best&#x27;);
+const heartEls = [document.getElementById(&#x27;h1&#x27;), document.getElementById(&#x27;h2&#x27;), document.getElementById(&#x27;h3&#x27;)];
+
+const W = canvas.width, H = canvas.height;
+const GROUND = H - 30;
+const PLAYER_W = 28, PLAYER_H = 34;
+const GRAVITY = 0.6, JUMP_FORCE = -13;
+const MAX_LIVES = 3;
+
+const COL = {
+  sky: &#x27;#13132b&#x27;, ground: &#x27;#1e1e42&#x27;, groundLine: &#x27;#7c6ff750&#x27;,
+  player: &#x27;#7c6ff7&#x27;, playerShade: &#x27;#4a3fa0&#x27;, eye: &#x27;#ffffff&#x27;,
+  cube1: &#x27;#e05a5a&#x27;, cube1s: &#x27;#903030&#x27;,
+  cube2: &#x27;#5ab4e0&#x27;, cube2s: &#x27;#2a6090&#x27;,
+  cube3: &#x27;#e0c45a&#x27;, cube3s: &#x27;#907020&#x27;,
+  trail: &#x27;#7c6ff730&#x27;,
+};
+
+const stars = Array.from({length: 60}, () =&gt; ({
+  x: Math.random() * W, y: Math.random() * (GROUND - 20),
+  r: Math.random() * 1.5 + 0.3, twinkle: Math.random() * Math.PI * 2,
+}));
+
+let state = &#x27;menu&#x27;;
+let score, best = 0, frame, speed, cubes, particles, jumpCount, vy;
+let playerY, playerX = 80;
+let lives, invincible, invincibleTimer, flashTimer;
+
+function updateHeartsUI() {
+  heartEls.forEach((h, i) =&gt; {
+    h.classList.toggle(&#x27;lost&#x27;, i &gt;= lives);
+  });
+}
+
+function resetGame() {
+  score = 0; frame = 0; speed = 4;
+  cubes = []; particles = [];
+  playerY = GROUND - PLAYER_H;
+  jumpCount = 0; vy = 0;
+  lives = MAX_LIVES;
+  invincible = false; invincibleTimer = 0; flashTimer = 0;
+  updateHeartsUI();
+}
+
+function spawnCube() {
+  const types = [
+    { w: 28, h: 28, col: COL.cube1, shade: COL.cube1s },
+    { w: 24, h: 40, col: COL.cube2, shade: COL.cube2s },
+    { w: 36, h: 24, col: COL.cube3, shade: COL.cube3s },
+  ];
+  const t = types[Math.floor(Math.random() * types.length)];
+  const stack = Math.random() &lt; 0.25 ? 2 : 1;
+  cubes.push({
+    x: W + 20, y: GROUND - t.h * stack,
+    w: t.w, h: t.h * stack,
+    col: t.col, shade: t.shade,
+  });
+}
+
+function jump() {
+  if (state !== &#x27;play&#x27;) return;
+  if (jumpCount &lt; 2) {
+    vy = JUMP_FORCE + (jumpCount === 1 ? 2 : 0);
+    jumpCount++;
+    playSFX(&#x27;jump&#x27;);
+    spawnParticles(playerX + PLAYER_W / 2, playerY + PLAYER_H, &#x27;#7c6ff7&#x27;, 8);
+  }
+}
+
+function spawnParticles(x, y, col, n) {
+  for (let i = 0; i &lt; n; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const spd = Math.random() * 3 + 1;
+    particles.push({
+      x, y,
+      vx: Math.cos(angle) * spd,
+      vy: Math.sin(angle) * spd - 2,
+      life: 1, col,
+      r: Math.random() * 4 + 2,
+    });
+  }
+}
+
+// Input
+document.addEventListener(&#x27;keydown&#x27;, e =&gt; {
+  if (e.code === &#x27;Space&#x27;) {
+    e.preventDefault();
+    if (state === &#x27;menu&#x27; || state === &#x27;dead&#x27;) startGame();
+    else jump();
+  }
+});
+canvas.addEventListener(&#x27;pointerdown&#x27;, () =&gt; {
+  if (state === &#x27;menu&#x27; || state === &#x27;dead&#x27;) startGame();
+  else jump();
+});
+startBtn.addEventListener(&#x27;click&#x27;, startGame);
+
+function startGame() {
+  resetGame();
+  state = &#x27;play&#x27;;
+  overlay.style.display = &#x27;none&#x27;;
+  startMusic();
+  loop();
+}
+
+function loseLife() {
+  lives--;
+  updateHeartsUI();
+  // shake canvas
+  canvas.classList.remove(&#x27;shaking&#x27;);
+  void canvas.offsetWidth;
+  canvas.classList.add(&#x27;shaking&#x27;);
+  setTimeout(() =&gt; canvas.classList.remove(&#x27;shaking&#x27;), 400);
+
+  if (lives &lt;= 0) {
+    gameOver();
+  } else {
+    playSFX(&#x27;hit&#x27;);
+    invincible = true;
+    invincibleTimer = 120; // 2 seconds of invincibility
+    spawnParticles(playerX + PLAYER_W / 2, playerY + PLAYER_H / 2, COL.cube1, 14);
+    // push cubes away so player has breathing room
+    cubes.forEach(c =&gt; { if (c.x &lt; playerX + 80) c.x = playerX + 100; });
+  }
+}
+
+function gameOver() {
+  state = &#x27;dead&#x27;;
+  playSFX(&#x27;die&#x27;);
+  if (score &gt; best) best = score;
+  bestEl.textContent = best;
+  spawnParticles(playerX + PLAYER_W / 2, playerY + PLAYER_H / 2, COL.cube1, 24);
+
+  overlayH2.textContent = &#x27;¡GAME OVER!&#x27;;
+  overlayP[0].textContent = `Puntuación: ${score}  ·  Récord: ${best}`;
+  overlayP[1].textContent = &#x27;&#x27;;
+  startBtn.textContent = &#x27;▶ REINTENTAR&#x27;;
+  overlay.style.display = &#x27;flex&#x27;;
+}
+
+// Draw helpers
+function drawCube3D(x, y, w, h, col, shade) {
+  const d = 6;
+  ctx.fillStyle = shade;
+  ctx.beginPath();
+  ctx.moveTo(x,y); ctx.lineTo(x+w,y); ctx.lineTo(x+w-d,y-d); ctx.lineTo(x-d,y-d);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle = shade;
+  ctx.beginPath();
+  ctx.moveTo(x+w,y); ctx.lineTo(x+w,y+h); ctx.lineTo(x+w-d,y+h-d); ctx.lineTo(x+w-d,y-d);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle = col;
+  ctx.fillRect(x, y, w, h);
+}
+
+function drawPlayer(x, y, ghosted) {
+  ctx.globalAlpha = ghosted ? (flashTimer % 10 &lt; 5 ? 0.3 : 0.8) : 1;
+  drawCube3D(x, y, PLAYER_W, PLAYER_H, COL.player, COL.playerShade);
+  // eyes
+  ctx.fillStyle = COL.eye;
+  ctx.fillRect(x+6,y+8,6,6); ctx.fillRect(x+16,y+8,6,6);
+  ctx.fillStyle = &#x27;#13132b&#x27;;
+  ctx.fillRect(x+8,y+10,3,3); ctx.fillRect(x+18,y+10,3,3);
+  // expression changes when low on lives
+  ctx.strokeStyle = COL.eye; ctx.lineWidth = 1.5;
+  if (lives === 1) {
+    // worried face
+    ctx.beginPath(); ctx.arc(x+PLAYER_W/2, y+24, 5, Math.PI, 0); ctx.stroke();
+  } else {
+    ctx.beginPath(); ctx.arc(x+PLAYER_W/2, y+22, 6, 0, Math.PI); ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawGround() {
+  ctx.fillStyle = COL.ground;
+  ctx.fillRect(0, GROUND, W, H - GROUND);
+  ctx.strokeStyle = COL.groundLine; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0,GROUND); ctx.lineTo(W,GROUND); ctx.stroke();
+  ctx.strokeStyle = &#x27;#1a1a3a&#x27;;
+  for (let x = (frame * speed * 0.5) % 40; x &lt; W; x += 40) {
+    ctx.beginPath(); ctx.moveTo(x,GROUND); ctx.lineTo(x,H); ctx.stroke();
+  }
+}
+
+function drawStars() {
+  stars.forEach(s =&gt; {
+    s.twinkle += 0.02;
+    const alpha = 0.4 + 0.3 * Math.sin(s.twinkle);
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+    ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
+  });
+}
+
+// Invincibility aura
+function drawAura(x, y) {
+  const pulse = 0.4 + 0.3 * Math.sin(flashTimer * 0.3);
+  ctx.strokeStyle = `rgba(255,200,80,${pulse})`;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.roundRect(x - 4, y - 4, PLAYER_W + 8, PLAYER_H + 8, 6);
+  ctx.stroke();
+}
+
+let raf;
+function loop() {
+  if (state !== &#x27;play&#x27;) return;
+  raf = requestAnimationFrame(loop);
+
+  ctx.fillStyle = COL.sky;
+  ctx.fillRect(0, 0, W, H);
+
+  drawStars();
+  drawGround();
+
+  frame++;
+  score = Math.floor(frame / 6);
+  ptsEl.textContent = score;
+  speed = 4 + score * 0.008;
+
+  // Invincibility countdown
+  if (invincible) {
+    invincibleTimer--;
+    flashTimer++;
+    if (invincibleTimer &lt;= 0) { invincible = false; flashTimer = 0; }
+  }
+
+  // Spawn cubes
+  const gap = Math.max(55, 120 - score * 0.3);
+  if (cubes.length === 0 || cubes[cubes.length-1].x &lt; W - gap) {
+    if (Math.random() &lt; 0.015 + score * 0.00005) spawnCube();
+  }
+  if (frame === 90) spawnCube();
+
+  // Update &amp; draw cubes
+  cubes = cubes.filter(c =&gt; c.x + c.w &gt; -20);
+  cubes.forEach(c =&gt; {
+    c.x -= speed;
+    drawCube3D(c.x, c.y, c.w, c.h, c.col, c.shade);
+
+    if (!invincible) {
+      const overlap =
+        playerX &lt; c.x + c.w - 4 &amp;&amp;
+        playerX + PLAYER_W &gt; c.x + 4 &amp;&amp;
+        playerY &lt; c.y + c.h - 2 &amp;&amp;
+        playerY + PLAYER_H &gt; c.y;
+      if (overlap) loseLife();
+    }
+  });
+
+  // Player physics
+  vy += GRAVITY;
+  playerY += vy;
+  if (playerY &gt;= GROUND - PLAYER_H) {
+    playerY = GROUND - PLAYER_H;
+    vy = 0; jumpCount = 0;
+  }
+
+  // Trail when airborne
+  if (playerY &lt; GROUND - PLAYER_H - 2) {
+    ctx.fillStyle = COL.trail;
+    ctx.fillRect(playerX - 6, playerY + PLAYER_H/2, PLAYER_W + 12, PLAYER_H/3);
+  }
+
+  // Particles
+  particles = particles.filter(p =&gt; p.life &gt; 0);
+  particles.forEach(p =&gt; {
+    p.x += p.vx; p.y += p.vy; p.vy += 0.2; p.life -= 0.04;
+    ctx.globalAlpha = p.life;
+    ctx.fillStyle = p.col;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha = 1;
+  });
+
+  if (invincible) drawAura(playerX, playerY);
+  drawPlayer(playerX, playerY, invincible);
+
+  // HUD: jump indicator
+  ctx.fillStyle = &#x27;#6060a0&#x27;;
+  ctx.font = &#x27;10px Courier New&#x27;;
+  ctx.textAlign = &#x27;right&#x27;;
+  ctx.fillText(&#x27;SALTO x&#x27; + (2 - jumpCount), W - 14, 20);
+
+  // Low life warning tint
+  if (lives === 1) {
+    const pulse = 0.05 + 0.04 * Math.sin(frame * 0.1);
+    ctx.fillStyle = `rgba(224,90,90,${pulse})`;
+    ctx.fillRect(0, 0, W, H);
+  }
+}
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+" loading="lazy"></iframe>
     </div>
   </section>
 
