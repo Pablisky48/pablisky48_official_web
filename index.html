@@ -190,6 +190,14 @@
   .playlist-block + .playlist-block{ margin-top:40px; }
   .playlist-label{ font-size:14px; color:var(--green); margin:0 0 12px; }
 
+  /* --- footer --- */
+  .site-footer{
+    text-align:center;
+    padding:32px 24px 56px;
+    color:var(--dim);
+    font-size:11px;
+  }
+
   /* --- amigos / primos --- */
   .friends-grid{ display:grid; grid-template-columns:1fr; gap:14px; }
   .friend-card{
@@ -219,6 +227,7 @@
     .friend-tag{ font-size:11px; }
     .friend-name{ font-size:18px; }
     .playlist-label{ font-size:17px; }
+    .site-footer{ font-size:13px; }
   }
 </style>
 </head>
@@ -288,8 +297,9 @@
     <h2>Mis listas de reproducción</h2>
     <p class="section-intro">Todo organizado por tema, listo para maratonear.</p>
     <div class="playlist-block">
+      <h3 class="playlist-label">Tutoriales y Soluciones</h3>
       <div class="screen">
-        <iframe class="embed-frame" src="https://www.youtube.com/embed/videoseries?list=PLPY0KscJ8Bx4vNCocCa0IFN_Xt-rVl3JQ" title="Mis listas de reproducción" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+        <iframe class="embed-frame" src="https://www.youtube.com/embed/videoseries?list=PLPY0KscJ8Bx4vNCocCa0IFN_Xt-rVl3JQ" title="Tutoriales y Soluciones" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
       </div>
       <a class="btn btn-primary" href="https://youtube.com/playlist?list=PLPY0KscJ8Bx4vNCocCa0IFN_Xt-rVl3JQ" target="_blank" rel="noopener">Abrir en YouTube</a>
     </div>
@@ -890,6 +900,10 @@ function loop() {
 
 </main>
 
+<footer class="site-footer">
+  <p>&copy; <span id="year"></span> Pablisky48. Todos los derechos reservados.</p>
+</footer>
+
 <script>
   const loaderTextEl = document.getElementById('loaderText');
   const loaderEl = document.getElementById('loader');
@@ -950,6 +964,8 @@ function loop() {
   } else {
     typeBoot();
   }
+
+  document.getElementById('year').textContent = new Date().getFullYear();
 
   // --- música de ambiente (playlist de YouTube: play/pausa, anterior, siguiente) ---
   const musicBtn = document.getElementById('musicToggle');
