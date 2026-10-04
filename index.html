@@ -124,7 +124,7 @@
   .channel-block{
     display:grid; grid-template-columns:1.1fr 0.9fr; gap:32px; align-items:center;
   }
-  @media (max-width:720px){ .channel-block{ grid-template-columns:1fr; } }
+  @media (max-width:699px){ .channel-block{ grid-template-columns:1fr; } }
 
   .screen{
     background:#000; border:1px solid var(--panel-edge);
@@ -147,7 +147,7 @@
   .channel-copy li::before{ content:"\203a"; position:absolute; left:0; color:var(--green); }
 
   /* --- presentación --- */
-  .intro-block{ display:flex; gap:28px; align-items:center; flex-wrap:wrap; }
+  .intro-block{ display:flex; flex-direction:column; align-items:flex-start; gap:20px; }
   .avatar{
     width:104px; height:104px; border-radius:50%;
     border:2px solid var(--panel-edge);
@@ -164,22 +164,34 @@
   .game-frame{ aspect-ratio:4/3; background:#0f0f1a; }
 
   /* --- música de ambiente --- */
-  .music-toggle{
-    position:fixed; right:18px; bottom:18px; z-index:60;
-    width:46px; height:46px; border-radius:50%;
+  .music-widget{
+    position:fixed; right:14px; bottom:14px; z-index:60;
+    display:flex; align-items:center; gap:4px;
     background:var(--panel); border:1px solid var(--panel-edge);
-    color:var(--green); font-size:17px;
+    border-radius:999px; padding:6px;
+    box-shadow:0 4px 16px rgba(0,0,0,0.45);
+  }
+  .music-btn{
+    width:34px; height:34px; border-radius:50%; flex-shrink:0;
+    background:transparent; border:none;
+    color:var(--dim); font-size:13px;
     display:flex; align-items:center; justify-content:center;
     cursor:pointer;
-    box-shadow:0 4px 16px rgba(0,0,0,0.45);
-    transition:transform 0.2s ease, border-color 0.2s ease;
+    transition:color 0.2s ease, transform 0.2s ease;
   }
-  .music-toggle:hover{ transform:scale(1.08); border-color:var(--green); }
-  .music-toggle[aria-pressed="true"]{ color:var(--amber); border-color:var(--amber); }
+  .music-btn:hover{ color:var(--ink); transform:scale(1.1); }
+  .music-btn-main{
+    width:40px; height:40px; font-size:16px;
+    background:var(--void); color:var(--green);
+    border:1px solid var(--panel-edge);
+  }
+  .music-btn-main[aria-pressed="true"]{ color:var(--amber); border-color:var(--amber); }
   .screen + .btn{ margin-top:20px; }
+  .playlist-block + .playlist-block{ margin-top:40px; }
+  .playlist-label{ font-size:14px; color:var(--green); margin:0 0 12px; }
 
   /* --- amigos / primos --- */
-  .friends-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:16px; }
+  .friends-grid{ display:grid; grid-template-columns:1fr; gap:14px; }
   .friend-card{
     display:flex; flex-direction:column; gap:10px;
     background:var(--panel); border:1px solid var(--panel-edge);
@@ -192,6 +204,8 @@
 
   /* --- larger screens: bump text up, small sizes read tiny at desktop viewing distance --- */
   @media (min-width:700px){
+    .intro-block{ flex-direction:row; align-items:center; gap:28px; }
+    .friends-grid{ grid-template-columns:repeat(4, 1fr); gap:16px; }
     .loader-text{ font-size:18px; }
     .btn{ font-size:14px; }
     h2{ font-size:26px; }
@@ -204,6 +218,7 @@
     .nav-links a{ font-size:13px; }
     .friend-tag{ font-size:11px; }
     .friend-name{ font-size:18px; }
+    .playlist-label{ font-size:17px; }
   }
 </style>
 </head>
@@ -214,8 +229,12 @@
 <div class="crt" aria-hidden="true"></div>
 <div class="vignette" aria-hidden="true"></div>
 
-<iframe id="ambientFrame" title="Música de ambiente" src="https://www.youtube.com/embed/videoseries?list=PLPY0KscJ8Bx4vNCocCa0IFN_Xt-rVl3JQ&amp;enablejsapi=1&amp;autoplay=0&amp;loop=1" allow="autoplay; encrypted-media" style="position:fixed; width:1px; height:1px; opacity:0; pointer-events:none;" aria-hidden="true"></iframe>
-<button id="musicToggle" class="music-toggle" type="button" aria-label="Reproducir música de ambiente" aria-pressed="false">&#9834;</button>
+<iframe id="ambientFrame" title="Música de ambiente" src="https://www.youtube.com/embed/videoseries?list=PLgBFbuqrFqtgqBs5PujQ8XSVzAtpOdYY2&amp;enablejsapi=1&amp;autoplay=0&amp;loop=1" allow="autoplay; encrypted-media" style="position:fixed; width:1px; height:1px; opacity:0; pointer-events:none;" aria-hidden="true"></iframe>
+<div class="music-widget">
+  <button id="musicPrev" class="music-btn" type="button" aria-label="Canción anterior">&#9198;</button>
+  <button id="musicToggle" class="music-btn music-btn-main" type="button" aria-label="Reproducir música de ambiente" aria-pressed="false">&#9834;</button>
+  <button id="musicNext" class="music-btn" type="button" aria-label="Siguiente canción">&#9197;</button>
+</div>
 
 <header>
   <nav class="nav">
@@ -268,10 +287,20 @@
   <section id="listas">
     <h2>Mis listas de reproducción</h2>
     <p class="section-intro">Todo organizado por tema, listo para maratonear.</p>
-    <div class="screen">
-      <iframe class="embed-frame" src="https://www.youtube.com/embed/videoseries?list=PLPY0KscJ8Bx4vNCocCa0IFN_Xt-rVl3JQ" title="Mis listas de reproducción" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+    <div class="playlist-block">
+      <div class="screen">
+        <iframe class="embed-frame" src="https://www.youtube.com/embed/videoseries?list=PLPY0KscJ8Bx4vNCocCa0IFN_Xt-rVl3JQ" title="Mis listas de reproducción" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <a class="btn btn-primary" href="https://youtube.com/playlist?list=PLPY0KscJ8Bx4vNCocCa0IFN_Xt-rVl3JQ" target="_blank" rel="noopener">Abrir en YouTube</a>
     </div>
-    <a class="btn btn-primary" href="https://youtube.com/playlist?list=PLPY0KscJ8Bx4vNCocCa0IFN_Xt-rVl3JQ" target="_blank" rel="noopener">Abrir en YouTube</a>
+
+    <div class="playlist-block">
+      <h3 class="playlist-label">Desarrollo de videojuegos</h3>
+      <div class="screen">
+        <iframe class="embed-frame" src="https://www.youtube.com/embed/videoseries?list=PLKfgk9KBnYOw" title="Desarrollo de videojuegos" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <a class="btn btn-primary" href="https://youtube.com/playlist?list=PLKfgk9KBnYOw" target="_blank" rel="noopener">Abrir en YouTube</a>
+    </div>
   </section>
 
   <section id="amigos">
@@ -922,8 +951,10 @@ function loop() {
     typeBoot();
   }
 
-  // --- música de ambiente (playlist de YouTube, arranca/pausa con el botón) ---
+  // --- música de ambiente (playlist de YouTube: play/pausa, anterior, siguiente) ---
   const musicBtn = document.getElementById('musicToggle');
+  const musicPrevBtn = document.getElementById('musicPrev');
+  const musicNextBtn = document.getElementById('musicNext');
   const ambientFrame = document.getElementById('ambientFrame');
   let musicPlaying = false;
 
@@ -931,11 +962,25 @@ function loop() {
     ambientFrame.contentWindow.postMessage(JSON.stringify({ event:'command', func, args:[] }), '*');
   }
 
-  musicBtn.addEventListener('click', () => {
-    musicPlaying = !musicPlaying;
-    ambientCmd(musicPlaying ? 'playVideo' : 'pauseVideo');
+  function setPlaying(state){
+    musicPlaying = state;
     musicBtn.textContent = musicPlaying ? '⏸' : '\u266a';
     musicBtn.setAttribute('aria-pressed', String(musicPlaying));
+  }
+
+  musicBtn.addEventListener('click', () => {
+    setPlaying(!musicPlaying);
+    ambientCmd(musicPlaying ? 'playVideo' : 'pauseVideo');
+  });
+
+  musicPrevBtn.addEventListener('click', () => {
+    ambientCmd('previousVideo');
+    setPlaying(true);
+  });
+
+  musicNextBtn.addEventListener('click', () => {
+    ambientCmd('nextVideo');
+    setPlaying(true);
   });
 </script>
 
