@@ -252,6 +252,56 @@
   .playlist-block + .playlist-block{ margin-top:40px; }
   .playlist-label{ font-size:14px; color:var(--green); margin:0 0 12px; }
 
+  /* --- pedidos --- */
+  button.btn{ cursor:pointer; }
+  button.btn:not(.btn-primary){ background:transparent; }
+  .pedido-form{ display:grid; gap:16px; max-width:560px; }
+  .field{ display:grid; gap:6px; }
+  .field span{ font-size:11px; color:var(--dim); }
+  .field input, .field select, .field textarea{
+    font-family:inherit; font-size:13px; color:var(--ink);
+    background:var(--panel); border:1px solid var(--panel-edge); border-radius:6px;
+    padding:10px 12px; width:100%;
+  }
+  .field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible{ outline:2px solid var(--amber); outline-offset:2px; }
+  .pedido-botones{ display:flex; gap:12px; flex-wrap:wrap; }
+  .ped-estado{ min-height:1.4em; margin:0; font-size:11px; color:var(--green); }
+  .ped-estado.error{ color:var(--crimson); }
+  .featured-video{ margin-top:40px; }
+
+  /* --- logros --- */
+  .ach-panel{
+    position:fixed; top:64px; right:14px; z-index:45;
+    width:min(320px, calc(100vw - 28px)); max-height:70vh; overflow-y:auto;
+    background:var(--panel); border:1px solid var(--panel-edge); border-radius:10px;
+    padding:14px; box-shadow:0 8px 24px rgba(0,0,0,0.45); display:none;
+  }
+  .ach-panel.open{ display:block; }
+  .ach-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; font-size:12px; color:var(--green); }
+  .ach-list{ list-style:none; margin:0; padding:0; display:grid; gap:12px; }
+  .ach-item{ display:flex; gap:10px; align-items:flex-start; font-size:11px; line-height:1.5; color:var(--dim); }
+  .ach-item strong{ display:block; font-weight:400; }
+  .ach-item small{ display:block; font-size:10px; opacity:0.85; }
+  .ach-star{ font-size:14px; line-height:1.2; }
+  .ach-item.done, .ach-item.done strong{ color:var(--ink); }
+  .ach-item.done .ach-star{ color:var(--amber); }
+  .ach-reset{
+    margin-top:14px; background:transparent; border:1px solid var(--panel-edge); border-radius:6px;
+    color:var(--dim); font-family:inherit; font-size:10px; padding:6px 10px; cursor:pointer;
+  }
+  .ach-reset:hover{ color:var(--ink); border-color:var(--dim); }
+  .ach-toast{
+    position:fixed; top:74px; left:50%; z-index:70;
+    transform:translate(-50%,-12px);
+    background:var(--panel); border:1px solid var(--amber); border-radius:10px;
+    padding:10px 16px; text-align:center; font-size:11px; color:var(--ink);
+    max-width:calc(100vw - 28px);
+    opacity:0; pointer-events:none;
+    transition:opacity 0.3s ease, transform 0.3s ease;
+  }
+  .ach-toast.show{ opacity:1; transform:translate(-50%,0); }
+  .ach-toast .t1{ display:block; margin-bottom:4px; font-size:10px; color:var(--amber); }
+
   /* --- footer --- */
   .site-footer{
     text-align:center;
@@ -291,6 +341,9 @@
     .playlist-label{ font-size:17px; }
     .site-footer{ font-size:13px; }
     .track-item, .track-empty{ font-size:13px; }
+    .field span, .ped-estado, .ach-item, .ach-toast, .ach-head{ font-size:13px; }
+    .field input, .field select, .field textarea{ font-size:15px; }
+    .ach-item small, .ach-toast .t1, .ach-reset{ font-size:11px; }
     .now-playing{ font-size:11px; max-width:220px; }
   }
 </style>
@@ -321,10 +374,12 @@
     <ul class="nav-links">
       <li><a href="#presentacion">Sobre mí</a></li>
       <li><a href="#canal">Canal</a></li>
+      <li><a href="#pedidos">Pedidos</a></li>
       <li><a href="#listas">Listas</a></li>
       <li><a href="#amigos">Amigos</a></li>
       <li><a href="#jugar">Jugar</a></li>
     </ul>
+    <button id="achToggle" class="theme-toggle" type="button" aria-label="Ver logros" aria-expanded="false">&#9733;</button>
     <button id="themeToggle" class="theme-toggle" type="button" aria-label="Cambiar a modo claro" aria-pressed="false">&#9728;</button>
   </div>
   </nav>
@@ -363,6 +418,39 @@
         <a class="btn btn-primary" href="https://www.youtube.com/@k49gamer_original" target="_blank" rel="noopener">Suscribirme en YouTube</a>
       </div>
     </div>
+
+    <div class="playlist-block featured-video">
+      <h3 class="playlist-label">Último video</h3>
+      <div class="screen" id="featuredScreen">
+        <div class="screen-label" id="featuredEmpty">PR&Oacute;XIMAMENTE<span>ac&aacute; va mi &uacute;ltimo video</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pedidos">
+    <h2>Pedidos</h2>
+    <p class="section-intro">&iquest;Necesit&aacute;s un tutorial o la soluci&oacute;n a algo? Contame y lo veo para un pr&oacute;ximo video.</p>
+    <form id="pedidoForm" class="pedido-form" novalidate>
+      <label class="field"><span>Tu nombre (opcional)</span>
+        <input id="pedNombre" type="text" maxlength="40" autocomplete="name">
+      </label>
+      <label class="field"><span>Tipo de pedido</span>
+        <select id="pedTipo">
+          <option>Tutorial</option>
+          <option>Soluci&oacute;n a un problema</option>
+          <option>Colaboraci&oacute;n</option>
+          <option>Otro</option>
+        </select>
+      </label>
+      <label class="field"><span>Contame qu&eacute; necesit&aacute;s</span>
+        <textarea id="pedMensaje" rows="5" maxlength="600"></textarea>
+      </label>
+      <p id="pedEstado" class="ped-estado" role="status" aria-live="polite"></p>
+      <div class="pedido-botones">
+        <button type="button" id="pedMail" class="btn btn-primary">Enviar por mail</button>
+        <button type="button" id="pedWsp" class="btn">Copiar y abrir WhatsApp</button>
+      </div>
+    </form>
   </section>
 
   <section id="listas">
@@ -976,6 +1064,13 @@ function loop() {
   <p>&copy; <span id="year"></span> Pablisky48. Todos los derechos reservados.</p>
 </footer>
 
+<div id="achPanel" class="ach-panel" aria-label="Logros">
+  <div class="ach-head"><span>LOGROS</span><span id="achCount">0/0</span></div>
+  <ul id="achList" class="ach-list"></ul>
+  <button id="achReset" class="ach-reset" type="button">Reiniciar logros</button>
+</div>
+<div id="achToast" class="ach-toast" role="status" aria-live="polite"><span class="t1">&iexcl;LOGRO DESBLOQUEADO!</span><span id="achToastName"></span></div>
+
 <script>
   const loaderTextEl = document.getElementById('loaderText');
   const loaderEl = document.getElementById('loader');
@@ -1065,6 +1160,233 @@ function loop() {
     const next = rootEl.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
     applyTheme(next);
     try { localStorage.setItem('pablisky48-theme', next); } catch(e){}
+  });
+
+  // --- último video destacado ---
+  // Pegá acá el link (o el ID) de tu último video de YouTube:
+  const FEATURED_VIDEO = 'https://youtu.be/uPaWki1EEHE';
+  (function(){
+    const m = FEATURED_VIDEO.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/);
+    const id = m ? m[1] : (/^[\w-]{11}$/.test(FEATURED_VIDEO) ? FEATURED_VIDEO : '');
+    if (!id) return;
+    const screen = document.getElementById('featuredScreen');
+    screen.textContent = '';
+    const f = document.createElement('iframe');
+    f.className = 'embed-frame';
+    f.src = 'https://www.youtube.com/embed/' + id;
+    f.title = 'Último video';
+    f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    f.allowFullscreen = true;
+    f.loading = 'lazy';
+    screen.appendChild(f);
+  })();
+
+  // --- logros ---
+  const LOGROS = [
+    { id:'inicio',      nombre:'Player 1 listo',   desc:'Entraste a la página' },
+    { id:'explorador',  nombre:'Explorador',       desc:'Visitá todas las secciones' },
+    { id:'dj',          nombre:'DJ del ambiente',  desc:'Poné música de fondo' },
+    { id:'jugador',     nombre:'Game on',          desc:'Probá Cube Jumper' },
+    { id:'suave',       nombre:'Luz suave',        desc:'Cambiá la iluminación' },
+    { id:'pedido',      nombre:'Misión aceptada',  desc:'Armá un pedido' },
+    { id:'completista', nombre:'100%',             desc:'Desbloqueá todos los logros' }
+  ];
+  const LOGROS_KEY = 'pablisky48-logros';
+  const VISTAS_KEY = 'pablisky48-vistas';
+  const SECCIONES = ['presentacion','canal','pedidos','listas','amigos','jugar'];
+
+  function leerLista(key){
+    try {
+      const v = JSON.parse(localStorage.getItem(key) || '[]');
+      return Array.isArray(v) ? v : [];
+    } catch(e){ return []; }
+  }
+  function guardarLista(key, lista){
+    try { localStorage.setItem(key, JSON.stringify(lista)); } catch(e){}
+  }
+
+  let logrosOk = leerLista(LOGROS_KEY);
+  let seccionesVistas = leerLista(VISTAS_KEY);
+
+  const achToggle = document.getElementById('achToggle');
+  const achPanel = document.getElementById('achPanel');
+  const achList = document.getElementById('achList');
+  const achCount = document.getElementById('achCount');
+  const achToast = document.getElementById('achToast');
+  const achToastName = document.getElementById('achToastName');
+  let colaToasts = [];
+  let toastOcupado = false;
+
+  function renderLogros(){
+    achList.textContent = '';
+    LOGROS.forEach(l => {
+      const hecho = logrosOk.includes(l.id);
+      const li = document.createElement('li');
+      li.className = 'ach-item' + (hecho ? ' done' : '');
+      const estrella = document.createElement('span');
+      estrella.className = 'ach-star';
+      estrella.textContent = hecho ? '\u2605' : '\u2606';
+      const caja = document.createElement('span');
+      const nombre = document.createElement('strong');
+      nombre.textContent = l.nombre;
+      const desc = document.createElement('small');
+      desc.textContent = l.desc;
+      caja.appendChild(nombre);
+      caja.appendChild(desc);
+      li.appendChild(estrella);
+      li.appendChild(caja);
+      achList.appendChild(li);
+    });
+    achCount.textContent = logrosOk.length + '/' + LOGROS.length;
+  }
+
+  function mostrarSiguienteToast(){
+    if (toastOcupado || !colaToasts.length) return;
+    toastOcupado = true;
+    achToastName.textContent = colaToasts.shift().nombre;
+    achToast.classList.add('show');
+    setTimeout(() => {
+      achToast.classList.remove('show');
+      setTimeout(() => { toastOcupado = false; mostrarSiguienteToast(); }, 400);
+    }, 3200);
+  }
+
+  function unlock(id){
+    if (logrosOk.includes(id)) return;
+    const l = LOGROS.find(x => x.id === id);
+    if (!l) return;
+    logrosOk.push(id);
+    guardarLista(LOGROS_KEY, logrosOk);
+    renderLogros();
+    colaToasts.push(l);
+    mostrarSiguienteToast();
+    if (LOGROS.filter(x => x.id !== 'completista').every(x => logrosOk.includes(x.id))) unlock('completista');
+  }
+
+  function setAchOpen(open){
+    achPanel.classList.toggle('open', open);
+    achToggle.setAttribute('aria-expanded', String(open));
+  }
+  achToggle.addEventListener('click', () => setAchOpen(!achPanel.classList.contains('open')));
+  document.addEventListener('click', (e) => {
+    if (!achPanel.classList.contains('open')) return;
+    if (achPanel.contains(e.target) || achToggle.contains(e.target)) return;
+    setAchOpen(false);
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setAchOpen(false); });
+  document.getElementById('achReset').addEventListener('click', () => {
+    logrosOk = [];
+    seccionesVistas = [];
+    guardarLista(LOGROS_KEY, logrosOk);
+    guardarLista(VISTAS_KEY, seccionesVistas);
+    renderLogros();
+  });
+  renderLogros();
+
+  // Entrar a la página (espera a que termine la pantalla de arranque)
+  setTimeout(() => unlock('inicio'), 4500);
+
+  // Visitar todas las secciones
+  function revisarExplorador(){
+    if (SECCIONES.every(s => seccionesVistas.includes(s))) unlock('explorador');
+  }
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entradas) => {
+      entradas.forEach(en => {
+        if (en.isIntersecting && !seccionesVistas.includes(en.target.id)) {
+          seccionesVistas.push(en.target.id);
+          guardarLista(VISTAS_KEY, seccionesVistas);
+          revisarExplorador();
+        }
+      });
+    }, { threshold: 0.25 });
+    SECCIONES.forEach(id => { const el = document.getElementById(id); if (el) io.observe(el); });
+  }
+
+  // Cambiar la iluminación
+  themeToggle.addEventListener('click', () => unlock('suave'));
+
+  // Probar Cube Jumper
+  const gameFrame = document.querySelector('#jugar iframe');
+  if (gameFrame) {
+    const marcarJuego = () => unlock('jugador');
+    const engancharJuego = () => {
+      try {
+        const d = gameFrame.contentDocument;
+        if (d) {
+          d.addEventListener('pointerdown', marcarJuego, { once:true });
+          d.addEventListener('keydown', marcarJuego, { once:true });
+        }
+      } catch(e){}
+    };
+    gameFrame.addEventListener('load', engancharJuego);
+    engancharJuego();
+    window.addEventListener('blur', () => {
+      setTimeout(() => { if (document.activeElement === gameFrame) marcarJuego(); }, 0);
+    });
+  }
+
+  // --- pedidos ---
+  const WSP_URL = 'https://chat.whatsapp.com/JuqAuLLIcXH98Lqok8Imwn';
+  const MAIL_TO = 'contactopablisky48oficial@gmail.com';
+  const pedForm = document.getElementById('pedidoForm');
+  const pedEstado = document.getElementById('pedEstado');
+
+  function estadoPedido(texto, error){
+    pedEstado.textContent = texto;
+    pedEstado.classList.toggle('error', !!error);
+  }
+
+  function armarPedido(){
+    const nombre = document.getElementById('pedNombre').value.trim();
+    const tipo = document.getElementById('pedTipo').value;
+    const mensaje = document.getElementById('pedMensaje').value.trim();
+    if (mensaje.length < 5) {
+      estadoPedido('Contame un poquito más qué necesitás.', true);
+      document.getElementById('pedMensaje').focus();
+      return null;
+    }
+    const texto = 'Hola Pablisky! Te dejo un pedido.\n' +
+      'Tipo: ' + tipo + '\n' +
+      (nombre ? 'De: ' + nombre + '\n' : '') +
+      '\n' + mensaje;
+    return { tipo, texto };
+  }
+
+  async function copiarTexto(texto){
+    try { await navigator.clipboard.writeText(texto); return true; } catch(e){}
+    try {
+      const t = document.createElement('textarea');
+      t.value = texto;
+      t.style.position = 'fixed';
+      t.style.opacity = '0';
+      document.body.appendChild(t);
+      t.select();
+      const ok = document.execCommand('copy');
+      t.remove();
+      return ok;
+    } catch(e){ return false; }
+  }
+
+  pedForm.addEventListener('submit', (e) => e.preventDefault());
+
+  document.getElementById('pedMail').addEventListener('click', () => {
+    const p = armarPedido();
+    if (!p) return;
+    estadoPedido('Abriendo tu app de mail…', false);
+    unlock('pedido');
+    window.location.href = 'mailto:' + MAIL_TO +
+      '?subject=' + encodeURIComponent('Pedido: ' + p.tipo) +
+      '&body=' + encodeURIComponent(p.texto);
+  });
+
+  document.getElementById('pedWsp').addEventListener('click', async () => {
+    const p = armarPedido();
+    if (!p) return;
+    const ok = await copiarTexto(p.texto);
+    estadoPedido(ok ? 'Copiado. Pegalo en el grupo de WhatsApp.' : 'No pude copiarlo solo: seleccioná el texto y copialo a mano.', !ok);
+    unlock('pedido');
+    window.open(WSP_URL, '_blank', 'noopener');
   });
 
   // --- música de ambiente (YouTube IFrame Player API: play/pausa, anterior, siguiente, ahora sonando) ---
@@ -1158,6 +1480,7 @@ function loop() {
     musicWidget.classList.toggle('is-playing', playing);
     musicBtn.textContent = playing ? '⏸' : '\u266a';
     musicBtn.setAttribute('aria-pressed', String(playing));
+    if (playing) unlock('dj');
 
     syncTrackList();
     if (playing) {
