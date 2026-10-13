@@ -228,6 +228,26 @@
     pointer-events:none;
   }
   .now-playing.show{ opacity:1; }
+  body.list-open .now-playing{ opacity:0; }
+
+  .track-list{
+    position:fixed; right:14px; bottom:66px; z-index:61;
+    width:min(300px, calc(100vw - 28px)); max-height:50vh; overflow-y:auto;
+    background:var(--panel); border:1px solid var(--panel-edge); border-radius:10px;
+    padding:6px; margin:0; list-style:none; display:none;
+    box-shadow:0 4px 16px rgba(0,0,0,0.45);
+  }
+  .track-list.open{ display:block; }
+  .track-item{
+    display:block; width:100%; text-align:left;
+    background:transparent; border:none; border-radius:6px;
+    color:var(--dim); font-family:inherit; font-size:11px; line-height:1.5;
+    padding:8px 10px; cursor:pointer;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .track-item:hover{ color:var(--ink); background:var(--void); }
+  .track-item.current{ color:var(--amber); }
+  .track-empty{ color:var(--dim); font-size:11px; padding:8px 10px; }
   .screen + .btn{ margin-top:20px; }
   .playlist-block + .playlist-block{ margin-top:40px; }
   .playlist-label{ font-size:14px; color:var(--green); margin:0 0 12px; }
@@ -270,6 +290,7 @@
     .friend-name{ font-size:18px; }
     .playlist-label{ font-size:17px; }
     .site-footer{ font-size:13px; }
+    .track-item, .track-empty{ font-size:13px; }
     .now-playing{ font-size:11px; max-width:220px; }
   }
 </style>
@@ -283,11 +304,14 @@
 
 <iframe id="ambientFrame" title="Música de ambiente" src="https://www.youtube.com/embed/videoseries?list=PLgBFbuqrFqtgqBs5PujQ8XSVzAtpOdYY2&amp;enablejsapi=1&amp;autoplay=0&amp;loop=1" allow="autoplay; encrypted-media" style="position:fixed; width:1px; height:1px; opacity:0; pointer-events:none;" aria-hidden="true"></iframe>
 <p id="nowPlaying" class="now-playing" aria-live="polite"></p>
+<ul id="trackList" class="track-list" aria-label="Lista de canciones"></ul>
 <div id="musicWidget" class="music-widget">
   <span class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+  <button id="musicList" class="music-btn" type="button" aria-label="Elegir canción" aria-expanded="false">&#9776;</button>
   <button id="musicPrev" class="music-btn" type="button" aria-label="Canción anterior">&#9198;</button>
   <button id="musicToggle" class="music-btn music-btn-main" type="button" aria-label="Reproducir música de ambiente" aria-pressed="false">&#9834;</button>
   <button id="musicNext" class="music-btn" type="button" aria-label="Siguiente canción">&#9197;</button>
+  <button id="musicRestart" class="music-btn" type="button" aria-label="Reiniciar canción">&#8634;</button>
 </div>
 
 <header>
@@ -1051,11 +1075,83 @@ function loop() {
   const nowPlayingEl = document.getElementById('nowPlaying');
   let ambientPlayer = null;
 
+  const musicListBtn = document.getElementById('musicList');
+  const musicRestartBtn = document.getElementById('musicRestart');
+  const trackListEl = document.getElementById('trackList');
+  let trackIds = [];
+  const trackTitles = {};
+  let trackButtons = [];
+  let titlesRequested = false;
+
   window.onYouTubeIframeAPIReady = function(){
     ambientPlayer = new YT.Player('ambientFrame', {
-      events: { 'onStateChange': onAmbientStateChange }
+      events: { 'onReady': syncTrackList, 'onStateChange': onAmbientStateChange }
     });
   };
+
+  function trackLabel(i){
+    return (i + 1) + '. ' + (trackTitles[trackIds[i]] || ('Canción ' + (i + 1)));
+  }
+
+  function updateTrackLabels(){
+    let cur = -1;
+    try { cur = ambientPlayer.getPlaylistIndex(); } catch(e){}
+    trackButtons.forEach((b, i) => {
+      b.textContent = trackLabel(i);
+      b.classList.toggle('current', i === cur);
+    });
+  }
+
+  function syncTrackList(){
+    if (!ambientPlayer) return;
+    let ids = [];
+    try { ids = ambientPlayer.getPlaylist() || []; } catch(e){}
+    if (ids.length && ids.join(',') !== trackIds.join(',')) {
+      trackIds = ids;
+      trackListEl.textContent = '';
+      trackButtons = trackIds.map((id, i) => {
+        const li = document.createElement('li');
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'track-item';
+        b.addEventListener('click', () => {
+          ambientPlayer.playVideoAt(i);
+        });
+        li.appendChild(b);
+        trackListEl.appendChild(li);
+        return b;
+      });
+    }
+    if (!trackIds.length && !trackListEl.children.length) {
+      const li = document.createElement('li');
+      li.className = 'track-empty';
+      li.textContent = 'La lista se carga al reproducir…';
+      trackListEl.appendChild(li);
+    }
+    if (trackIds.length) {
+      const empty = trackListEl.querySelector('.track-empty');
+      if (empty) empty.remove();
+    }
+    updateTrackLabels();
+  }
+
+  async function loadTrackTitles(){
+    if (titlesRequested || !trackIds.length) return;
+    titlesRequested = true;
+    const pending = trackIds.filter(id => !trackTitles[id]);
+    let next = 0;
+    async function worker(){
+      while (next < pending.length) {
+        const id = pending[next++];
+        try {
+          const r = await fetch('https://noembed.com/embed?url=' + encodeURIComponent('https://www.youtube.com/watch?v=' + id));
+          const j = await r.json();
+          if (j && j.title) { trackTitles[id] = j.title; updateTrackLabels(); }
+        } catch(e){ /* sin título, queda "Canción N" */ }
+      }
+    }
+    await Promise.all([worker(), worker(), worker()]);
+  }
 
   function onAmbientStateChange(e){
     const playing = e.data === YT.PlayerState.PLAYING;
@@ -1063,9 +1159,12 @@ function loop() {
     musicBtn.textContent = playing ? '⏸' : '\u266a';
     musicBtn.setAttribute('aria-pressed', String(playing));
 
+    syncTrackList();
     if (playing) {
       const data = ambientPlayer.getVideoData();
       const title = (data && data.title) ? data.title : '';
+      if (data && data.video_id && title) trackTitles[data.video_id] = title;
+      updateTrackLabels();
       nowPlayingEl.textContent = title ? ('Sonando: ' + title) : '';
       nowPlayingEl.classList.toggle('show', !!title);
     } else {
@@ -1090,6 +1189,29 @@ function loop() {
     if (!ambientPlayer) return;
     ambientPlayer.nextVideo();
     ambientPlayer.playVideo();
+  });
+
+  musicRestartBtn.addEventListener('click', () => {
+    if (!ambientPlayer) return;
+    ambientPlayer.seekTo(0, true);
+    ambientPlayer.playVideo();
+  });
+
+  function setListOpen(open){
+    trackListEl.classList.toggle('open', open);
+    document.body.classList.toggle('list-open', open);
+    musicListBtn.setAttribute('aria-expanded', String(open));
+    if (open) { syncTrackList(); loadTrackTitles(); }
+  }
+
+  musicListBtn.addEventListener('click', () => {
+    setListOpen(!trackListEl.classList.contains('open'));
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!trackListEl.classList.contains('open')) return;
+    if (trackListEl.contains(e.target) || musicWidget.contains(e.target)) return;
+    setListOpen(false);
   });
 </script>
 <script src="https://www.youtube.com/iframe_api" async></script>
