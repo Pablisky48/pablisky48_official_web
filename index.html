@@ -376,6 +376,15 @@
   .set-btn{ font-family:inherit; font-size:11px; padding:8px 14px; border-radius:6px; border:1px solid var(--panel-edge); background:transparent; color:var(--green); cursor:pointer; }
   .set-btn[aria-pressed="false"]{ color:var(--dim); }
 
+  /* --- donaciones --- */
+  .donacion-card{ max-width:560px; background:var(--panel); border:1px solid var(--panel-edge); border-radius:10px; padding:18px; display:grid; gap:16px; }
+  .donacion-banco{ font-size:14px; color:var(--green); }
+  .donacion-fila{ display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+  .donacion-label{ display:block; margin-bottom:4px; font-size:10px; color:var(--dim); }
+  .donacion-valor{ display:block; font-size:13px; color:var(--ink); word-break:break-all; }
+  .copy-btn{ font-family:inherit; font-size:11px; padding:8px 14px; border-radius:6px; border:1px solid var(--panel-edge); background:transparent; color:var(--green); cursor:pointer; }
+  .copy-btn:hover{ border-color:var(--green); }
+
   /* --- preguntas frecuentes --- */
   .faq-list{ display:grid; gap:10px; max-width:720px; }
   .faq-item{ background:var(--panel); border:1px solid var(--panel-edge); border-radius:8px; }
@@ -436,6 +445,10 @@
     .field input, .field select, .field textarea{ font-size:15px; }
     .ach-item small, .ach-toast .t1, .ach-reset{ font-size:11px; }
     .msg-toast, .set-label, .set-btn{ font-size:13px; }
+    .donacion-banco{ font-size:17px; }
+    .donacion-label{ font-size:12px; }
+    .donacion-valor{ font-size:16px; }
+    .copy-btn{ font-size:13px; }
     .faq-item summary, .faq-item p{ font-size:14px; }
     .now-playing{ font-size:11px; max-width:220px; }
   }
@@ -470,6 +483,7 @@
     <li><a href="#listas">Listas</a></li>
     <li><a href="#amigos">Amigos</a></li>
     <li><a href="#jugar">Jugar</a></li>
+    <li><a href="#donacion">Donar</a></li>
     <li><a href="#faq">FAQ</a></li>
   </ul>
   <div class="nav-tools">
@@ -1155,6 +1169,28 @@ function loop() {
     </div>
   </section>
 
+  <section id="donacion">
+    <h2>Donaciones</h2>
+    <p class="section-intro">No es obligatorio para nada: todo mi contenido es gratis para todos. Pero si querés ayudarme a seguir creando, ¡te lo agradezco un montón!</p>
+    <div class="donacion-card">
+      <div class="donacion-banco">Santander</div>
+      <div class="donacion-fila">
+        <div>
+          <span class="donacion-label">Alias</span>
+          <span class="donacion-valor">Pablisky48</span>
+        </div>
+        <button type="button" class="copy-btn" data-copiar="Pablisky48" data-nombre="Alias">Copiar</button>
+      </div>
+      <div class="donacion-fila">
+        <div>
+          <span class="donacion-label">CBU</span>
+          <span class="donacion-valor">0720514988000002277622</span>
+        </div>
+        <button type="button" class="copy-btn" data-copiar="0720514988000002277622" data-nombre="CBU">Copiar</button>
+      </div>
+    </div>
+  </section>
+
   <section id="faq">
     <h2>Preguntas frecuentes</h2>
     <p class="section-intro">Lo que más suelen preguntarme.</p>
@@ -1360,7 +1396,7 @@ function loop() {
   ];
   const LOGROS_KEY = 'pablisky48-logros';
   const VISTAS_KEY = 'pablisky48-vistas';
-  const SECCIONES = ['presentacion','canal','pedidos','listas','amigos','jugar','faq'];
+  const SECCIONES = ['presentacion','canal','pedidos','listas','amigos','jugar','donacion','faq'];
 
   function leerLista(key){
     try {
@@ -1736,6 +1772,14 @@ function loop() {
     clearTimeout(timerLogo);
     timerLogo = setTimeout(() => { toquesLogo = 0; }, 2500);
     if (toquesLogo >= 7) { toquesLogo = 0; activarSecreto(); }
+  });
+
+  // --- donaciones: copiar alias / CBU ---
+  document.querySelectorAll('[data-copiar]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const ok = await copiarTexto(btn.dataset.copiar);
+      mostrarMensaje(ok ? (btn.dataset.nombre + ' copiado') : 'No pude copiarlo, seleccionalo a mano');
+    });
   });
 
   // --- música de ambiente (YouTube IFrame Player API: play/pausa, anterior, siguiente, ahora sonando) ---
