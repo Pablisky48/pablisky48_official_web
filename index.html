@@ -461,7 +461,8 @@
     .channel-copy ul{ font-size:15px; }
     .intro-copy p{ font-size:17px; }
     .channel-desc{ font-size:16px; }
-    .nav-links a{ font-size:13px; }
+    .nav-links{ gap:12px; }
+    .nav-links a{ font-size:12px; }
     .friend-tag{ font-size:11px; }
     .friend-name{ font-size:18px; }
     .playlist-label{ font-size:17px; }
@@ -513,6 +514,7 @@
     <li><a href="#listas">Listas</a></li>
     <li><a href="#amigos">Amigos</a></li>
     <li><a href="#jugar">Jugar</a></li>
+    <li><a href="#videojuegos">Videojuegos</a></li>
     <li><a href="#mugen">Mugen</a></li>
     <li><a href="#donacion">Donar</a></li>
     <li><a href="#faq">FAQ</a></li>
@@ -538,6 +540,7 @@
         <p>Grupo de WhatsApp: <a href="https://chat.whatsapp.com/JuqAuLLIcXH98Lqok8Imwn" target="_blank" rel="noopener">unite acá</a></p>
         <p>TikTok: <a href="https://www.tiktok.com/@pablisky48_official_arg" target="_blank" rel="noopener">@pablisky48_official_arg</a></p>
         <p>Steam: <a href="https://steamcommunity.com/id/Pablisky48/" target="_blank" rel="noopener">Pablisky48</a></p>
+        <p>Discord: <a href="https://discord.gg/gunwSA2Cjm" target="_blank" rel="noopener">unite al servidor</a></p>
       </div>
     </div>
   </section>
@@ -1200,6 +1203,12 @@ function loop() {
     </div>
   </section>
 
+  <section id="videojuegos-entrada">
+    <h2>Videojuegos</h2>
+    <p class="section-intro">Mi apartado exclusivo de videojuegos: mis juegos, videos y todo lo que voy aprendiendo.</p>
+    <a class="btn btn-primary" href="#videojuegos">Entrar al apartado de Videojuegos</a>
+  </section>
+
   <section id="mugen-entrada">
     <h2>Mugen</h2>
     <p class="section-intro">Tengo un apartado exclusivo de Mugen. Entrá para ver todo lo que hay.</p>
@@ -1246,7 +1255,7 @@ function loop() {
       </details>
       <details class="faq-item">
         <summary>¿Dónde te puedo seguir?</summary>
-        <p>En YouTube, Instagram, TikTok y Steam. Los links están en la sección Sobre mí y en la barra de redes.</p>
+        <p>En YouTube, Instagram, TikTok, Steam y Discord. Los links están en la sección Sobre mí y en la barra de redes.</p>
       </details>
       <details class="faq-item">
         <summary>¿Cómo funcionan los logros?</summary>
@@ -1259,6 +1268,22 @@ function loop() {
     </div>
   </section>
 
+</main>
+
+<main class="wrap pagina" id="pagina-videojuegos" hidden>
+  <a class="btn" href="#">&larr; Volver al inicio</a>
+  <h1>Videojuegos</h1>
+  <p class="section-intro">Apartado exclusivo de videojuegos: lo que creo y lo que voy aprendiendo.</p>
+
+  <section class="mugen-bloque">
+    <h2>Videos</h2>
+    <div id="vjVideos" class="mugen-grid videos"></div>
+  </section>
+
+  <section class="mugen-bloque">
+    <h2>Mis juegos y links</h2>
+    <div id="vjLinks" class="mugen-grid"></div>
+  </section>
 </main>
 
 <main class="wrap pagina" id="pagina-mugen" hidden>
@@ -1289,6 +1314,7 @@ function loop() {
     <a href="https://www.youtube.com/@k49gamer_original" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2C2 8.8 2 12 2 12s0 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.4-1.6.4-4.8.4-4.8s0-3.2-.4-4.8zM10 15V9l5.2 3L10 15z"/></svg></a>
     <a href="https://www.instagram.com/pablisky48_official" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.3" fill="currentColor"/></svg></a>
     <a href="https://chat.whatsapp.com/JuqAuLLIcXH98Lqok8Imwn" target="_blank" rel="noopener" aria-label="Grupo de WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.6-2-1-1 .8c-1-.4-1.9-1.3-2.3-2.3l.8-1-1-2z" fill="currentColor"/></svg></a>
+    <a href="https://discord.gg/gunwSA2Cjm" target="_blank" rel="noopener" aria-label="Discord" title="Discord"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.2 5.4C8.7 4.8 10.3 4.5 12 4.5s3.3.3 4.8.9c1.9 2.8 2.9 5.9 3 9.6-1.4 1.1-3 1.8-4.6 2.2l-.9-1.6c.5-.2 1-.4 1.4-.7-2.4 1-5.2 1-7.6 0 .4.3.9.5 1.4.7l-.9 1.6c-1.6-.4-3.2-1.1-4.6-2.2.1-3.7 1.1-6.8 3-9.6z"/><circle cx="9.2" cy="12" r="1.5" style="fill:var(--panel)"/><circle cx="14.8" cy="12" r="1.5" style="fill:var(--panel)"/></svg></a>
     <a href="mailto:contactopablisky48oficial@gmail.com" aria-label="Gmail" title="Gmail"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 7l8.5 6.5L20.5 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
     <button id="shareBtn" type="button" aria-label="Compartir la página" title="Compartir"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3" fill="currentColor"/><circle cx="6" cy="12" r="3" fill="currentColor"/><circle cx="18" cy="19" r="3" fill="currentColor"/><path d="M8.6 10.6l6.8-4.2M8.6 13.4l6.8 4.2" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
   </div>
@@ -1446,11 +1472,12 @@ function loop() {
     { id:'estilo',      nombre:'A tu estilo',      desc:'Cambiá el color de acento' },
     { id:'embajador',   nombre:'Embajador',        desc:'Compartí la página' },
     { id:'peleador',    nombre:'Peleador',         desc:'Entrá al apartado de Mugen' },
+    { id:'gamer',       nombre:'Gamer de corazón', desc:'Entrá al apartado de Videojuegos' },
     { id:'completista', nombre:'100%',             desc:'Desbloqueá todos los logros' }
   ];
   const LOGROS_KEY = 'pablisky48-logros';
   const VISTAS_KEY = 'pablisky48-vistas';
-  const SECCIONES = ['presentacion','canal','pedidos','listas','amigos','jugar','mugen-entrada','donacion','faq'];
+  const SECCIONES = ['presentacion','canal','pedidos','listas','amigos','jugar','videojuegos-entrada','mugen-entrada','donacion','faq'];
 
   function leerLista(key){
     try {
@@ -1854,10 +1881,10 @@ function loop() {
     p.textContent = texto;
     return p;
   }
-  (function(){
-    const cVideos = document.getElementById('mugenVideos');
-    const validos = MUGEN_VIDEOS.filter(v => idDeVideo(v.video));
-    if (!validos.length) cVideos.appendChild(vacioMensaje('Próximamente: acá van mis videos de Mugen.'));
+  function llenarPagina(cfg){
+    const cVideos = document.getElementById(cfg.idVideos);
+    const validos = cfg.videos.filter(v => idDeVideo(v.video));
+    if (!validos.length) cVideos.appendChild(vacioMensaje(cfg.vacioVideos));
     validos.forEach(v => {
       const caja = document.createElement('div');
       const titulo = document.createElement('h3');
@@ -1868,7 +1895,7 @@ function loop() {
       const f = document.createElement('iframe');
       f.className = 'embed-frame';
       f.src = 'https://www.youtube.com/embed/' + idDeVideo(v.video);
-      f.title = v.titulo || 'Video de Mugen';
+      f.title = v.titulo || 'Video';
       f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
       f.allowFullscreen = true;
       f.loading = 'lazy';
@@ -1878,14 +1905,16 @@ function loop() {
       cVideos.appendChild(caja);
     });
 
-    const cLinks = document.getElementById('mugenLinks');
-    if (!MUGEN_LINKS.length) cLinks.appendChild(vacioMensaje('Próximamente: acá van las descargas y links de Mugen.'));
-    MUGEN_LINKS.forEach(l => {
+    const cLinks = document.getElementById(cfg.idLinks);
+    if (!cfg.links.length) cLinks.appendChild(vacioMensaje(cfg.vacioLinks));
+    cfg.links.forEach(l => {
       const a = document.createElement('a');
       a.className = 'mugen-link';
       a.href = l.url;
-      a.target = '_blank';
-      a.rel = 'noopener';
+      if (!String(l.url).startsWith('#')) {
+        a.target = '_blank';
+        a.rel = 'noopener';
+      }
       const t = document.createElement('strong');
       t.textContent = l.titulo || l.url;
       a.appendChild(t);
@@ -1896,10 +1925,25 @@ function loop() {
       }
       cLinks.appendChild(a);
     });
-  })();
+  }
+
+  // Videojuegos: videos y links del apartado
+  const VJ_VIDEOS = [];
+  const VJ_LINKS = [
+    { titulo:'Cube Jumper', url:'#jugar', desc:'Mi juego de saltar cubos, hecho con HTML5. Jugalo directo en la página.' },
+    { titulo:'Playlist: Desarrollo de videojuegos', url:'https://youtube.com/playlist?list=PLKfgk9KBnYOw', desc:'Mis videos sobre crear videojuegos.' }
+  ];
+
+  llenarPagina({ idVideos:'mugenVideos', videos:MUGEN_VIDEOS, vacioVideos:'Próximamente: acá van mis videos de Mugen.',
+                 idLinks:'mugenLinks',   links:MUGEN_LINKS,   vacioLinks:'Próximamente: acá van las descargas y links de Mugen.' });
+  llenarPagina({ idVideos:'vjVideos', videos:VJ_VIDEOS, vacioVideos:'Próximamente: acá van mis videos de videojuegos.',
+                 idLinks:'vjLinks',   links:VJ_LINKS,   vacioLinks:'Próximamente.' });
 
   // --- páginas internas dentro del mismo archivo (#mugen) ---
-  const RUTAS = { mugen: { id:'pagina-mugen', titulo:'Mugen — Pablisky48' } };
+  const RUTAS = {
+    mugen:       { id:'pagina-mugen',       titulo:'Mugen — Pablisky48',       logro:'peleador' },
+    videojuegos: { id:'pagina-videojuegos', titulo:'Videojuegos — Pablisky48', logro:'gamer' }
+  };
   const TITULO_INICIO = document.title;
   function mostrarRuta(){
     const nombre = location.hash.replace('#', '');
@@ -1909,7 +1953,7 @@ function loop() {
     document.title = ruta ? ruta.titulo : TITULO_INICIO;
     if (ruta) {
       window.scrollTo(0, 0);
-      if (nombre === 'mugen') unlock('peleador');
+      if (ruta.logro) unlock(ruta.logro);
     } else if (nombre) {
       const el = document.getElementById(nombre);
       if (el) el.scrollIntoView();
