@@ -413,6 +413,21 @@
   main.modo-secreto{ animation:arcoiris 2s linear infinite; }
   @keyframes arcoiris{ from{ filter:hue-rotate(0deg); } to{ filter:hue-rotate(360deg); } }
 
+  /* --- páginas internas (Mugen) --- */
+  .pagina{ padding-top:24px; padding-bottom:40px; }
+  .pagina h1{ font-size:24px; line-height:1.5; margin:28px 0 12px; }
+  .mugen-bloque{ margin-top:36px; padding:0; }
+  .mugen-grid{ display:grid; grid-template-columns:1fr; gap:20px; }
+  .mugen-link{
+    display:block; background:var(--panel); border:1px solid var(--panel-edge); border-radius:10px;
+    padding:16px; text-decoration:none; color:var(--ink);
+    transition:transform 0.25s ease, border-color 0.25s ease;
+  }
+  .mugen-link:hover{ border-color:var(--green); transform:translateY(-3px); }
+  .mugen-link strong{ display:block; margin-bottom:6px; font-weight:400; font-size:14px; color:var(--green); }
+  .mugen-link span{ display:block; font-size:12px; line-height:1.6; color:var(--dim); }
+  .vacio{ font-size:12px; line-height:1.8; color:var(--dim); border:1px dashed var(--panel-edge); border-radius:10px; padding:18px; }
+
   /* --- footer --- */
   .site-footer{
     text-align:center;
@@ -456,6 +471,10 @@
     .field input, .field select, .field textarea{ font-size:15px; }
     .ach-item small, .ach-toast .t1, .ach-reset{ font-size:11px; }
     .msg-toast, .set-label, .set-btn{ font-size:13px; }
+    .pagina h1{ font-size:34px; }
+    .mugen-grid.videos{ grid-template-columns:repeat(2, 1fr); }
+    .mugen-link strong{ font-size:17px; }
+    .mugen-link span, .vacio{ font-size:14px; }
     .donacion-banco{ font-size:17px; }
     .donacion-label{ font-size:12px; }
     .donacion-valor{ font-size:16px; }
@@ -494,6 +513,7 @@
     <li><a href="#listas">Listas</a></li>
     <li><a href="#amigos">Amigos</a></li>
     <li><a href="#jugar">Jugar</a></li>
+    <li><a href="#mugen">Mugen</a></li>
     <li><a href="#donacion">Donar</a></li>
     <li><a href="#faq">FAQ</a></li>
   </ul>
@@ -505,7 +525,7 @@
   </nav>
 </header>
 
-<main class="wrap">
+<main class="wrap" id="inicio">
 
   <section id="presentacion">
     <div class="intro-block">
@@ -1180,6 +1200,12 @@ function loop() {
     </div>
   </section>
 
+  <section id="mugen-entrada">
+    <h2>Mugen</h2>
+    <p class="section-intro">Tengo un apartado exclusivo de Mugen. Entrá para ver todo lo que hay.</p>
+    <a class="btn btn-primary" href="#mugen">Entrar al apartado de Mugen</a>
+  </section>
+
   <section id="donacion">
     <h2>Donaciones</h2>
     <p class="section-intro">No es obligatorio para nada: todo mi contenido es gratis para todos. Pero si querés ayudarme a seguir creando, ¡te lo agradezco un montón!</p>
@@ -1233,6 +1259,22 @@ function loop() {
     </div>
   </section>
 
+</main>
+
+<main class="wrap pagina" id="pagina-mugen" hidden>
+  <a class="btn" href="#">&larr; Volver al inicio</a>
+  <h1>Mugen</h1>
+  <p class="section-intro">Apartado exclusivo de Mugen: todo reunido en un solo lugar.</p>
+
+  <section class="mugen-bloque">
+    <h2>Videos</h2>
+    <div id="mugenVideos" class="mugen-grid videos"></div>
+  </section>
+
+  <section class="mugen-bloque">
+    <h2>Descargas y links</h2>
+    <div id="mugenLinks" class="mugen-grid"></div>
+  </section>
 </main>
 
 <footer class="site-footer">
@@ -1403,11 +1445,12 @@ function loop() {
     { id:'secreto',     nombre:'Código secreto',   desc:'Descubrí el truco escondido' },
     { id:'estilo',      nombre:'A tu estilo',      desc:'Cambiá el color de acento' },
     { id:'embajador',   nombre:'Embajador',        desc:'Compartí la página' },
+    { id:'peleador',    nombre:'Peleador',         desc:'Entrá al apartado de Mugen' },
     { id:'completista', nombre:'100%',             desc:'Desbloqueá todos los logros' }
   ];
   const LOGROS_KEY = 'pablisky48-logros';
   const VISTAS_KEY = 'pablisky48-vistas';
-  const SECCIONES = ['presentacion','canal','pedidos','listas','amigos','jugar','donacion','faq'];
+  const SECCIONES = ['presentacion','canal','pedidos','listas','amigos','jugar','mugen-entrada','donacion','faq'];
 
   function leerLista(key){
     try {
@@ -1759,9 +1802,9 @@ function loop() {
     [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => blip(f, f, 0.12, 0.05), i * 110));
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     lluviaConfeti();
-    const principal = document.querySelector('main');
-    principal.classList.add('modo-secreto');
-    setTimeout(() => principal.classList.remove('modo-secreto'), 8000);
+    const principales = document.querySelectorAll('main');
+    principales.forEach(m => m.classList.add('modo-secreto'));
+    setTimeout(() => principales.forEach(m => m.classList.remove('modo-secreto')), 8000);
   }
   const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
   let konamiPos = 0;
@@ -1792,6 +1835,91 @@ function loop() {
       mostrarMensaje(ok ? (btn.dataset.nombre + ' copiado') : 'No pude copiarlo, seleccionalo a mano');
     });
   });
+
+  // --- apartado exclusivo de Mugen: contenido ---
+  // Videos: poné el link o ID de YouTube y un título. Ejemplo:
+  //   { titulo:'Mi primer video de Mugen', video:'https://youtu.be/XXXXXXXXXXX' }
+  const MUGEN_VIDEOS = [];
+  // Links/descargas. Ejemplo:
+  //   { titulo:'Pack de personajes', url:'https://...', desc:'Descripción corta' }
+  const MUGEN_LINKS = [];
+
+  function idDeVideo(v){
+    const m = String(v).match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/);
+    return m ? m[1] : (/^[\w-]{11}$/.test(v) ? v : '');
+  }
+  function vacioMensaje(texto){
+    const p = document.createElement('p');
+    p.className = 'vacio';
+    p.textContent = texto;
+    return p;
+  }
+  (function(){
+    const cVideos = document.getElementById('mugenVideos');
+    const validos = MUGEN_VIDEOS.filter(v => idDeVideo(v.video));
+    if (!validos.length) cVideos.appendChild(vacioMensaje('Próximamente: acá van mis videos de Mugen.'));
+    validos.forEach(v => {
+      const caja = document.createElement('div');
+      const titulo = document.createElement('h3');
+      titulo.className = 'playlist-label';
+      titulo.textContent = v.titulo || 'Video';
+      const pantalla = document.createElement('div');
+      pantalla.className = 'screen';
+      const f = document.createElement('iframe');
+      f.className = 'embed-frame';
+      f.src = 'https://www.youtube.com/embed/' + idDeVideo(v.video);
+      f.title = v.titulo || 'Video de Mugen';
+      f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      f.allowFullscreen = true;
+      f.loading = 'lazy';
+      pantalla.appendChild(f);
+      caja.appendChild(titulo);
+      caja.appendChild(pantalla);
+      cVideos.appendChild(caja);
+    });
+
+    const cLinks = document.getElementById('mugenLinks');
+    if (!MUGEN_LINKS.length) cLinks.appendChild(vacioMensaje('Próximamente: acá van las descargas y links de Mugen.'));
+    MUGEN_LINKS.forEach(l => {
+      const a = document.createElement('a');
+      a.className = 'mugen-link';
+      a.href = l.url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      const t = document.createElement('strong');
+      t.textContent = l.titulo || l.url;
+      a.appendChild(t);
+      if (l.desc) {
+        const d = document.createElement('span');
+        d.textContent = l.desc;
+        a.appendChild(d);
+      }
+      cLinks.appendChild(a);
+    });
+  })();
+
+  // --- páginas internas dentro del mismo archivo (#mugen) ---
+  const RUTAS = { mugen: { id:'pagina-mugen', titulo:'Mugen — Pablisky48' } };
+  const TITULO_INICIO = document.title;
+  function mostrarRuta(){
+    const nombre = location.hash.replace('#', '');
+    const ruta = RUTAS[nombre];
+    document.getElementById('inicio').hidden = !!ruta;
+    Object.keys(RUTAS).forEach(k => { document.getElementById(RUTAS[k].id).hidden = (RUTAS[k] !== ruta); });
+    document.title = ruta ? ruta.titulo : TITULO_INICIO;
+    if (ruta) {
+      window.scrollTo(0, 0);
+      if (nombre === 'mugen') unlock('peleador');
+    } else if (nombre) {
+      const el = document.getElementById(nombre);
+      if (el) el.scrollIntoView();
+    } else {
+      window.scrollTo(0, 0);
+    }
+    actualizarScroll();
+  }
+  window.addEventListener('hashchange', mostrarRuta);
+  mostrarRuta();
 
   // --- música de ambiente (YouTube IFrame Player API: play/pausa, anterior, siguiente, ahora sonando) ---
   const musicBtn = document.getElementById('musicToggle');
